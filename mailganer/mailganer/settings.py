@@ -11,21 +11,39 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from environ import Env
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
+def get_env(dir_env=BASE_DIR, name_env='.env'):
+    """Environment variables lookup"""
+    env_global = Env()
+    env_path = os.path.join(dir_env, name_env)
+
+    if os.path.isfile(env_path):
+        Env.read_env(env_path)
+
+    return env_global
+
+
+# Environment
+ENV = get_env()
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ip(w+)_3pb&+w6ylx^c!5vsxn4eb5*g6f2wo7ho!ln3rd%#^cr'
+SECRET_KEY = ENV('SECRET_KEY', default='')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = ENV('DEBUG', default='True')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = '{} {}'.format(
+    ENV('DOMAIN', default='localhost'),
+    ENV('ALLOWED_HOSTS', default='127.0.0.1')
+)
 
 
 # Application definition
@@ -75,9 +93,14 @@ WSGI_APPLICATION = 'mailganer.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': ENV('SQL_ENGINE', default='django.db.backends.sqlite3'),
+        'NAME': ENV('SQL_DATABASE',
+                    default=os.path.join(BASE_DIR, 'db.sqlite3')),
+        'USER': ENV('SQL_USER', default='user'),
+        'PASSWORD': ENV('SQL_PASSWORD', default='password'),
+        'HOST': ENV('SQL_HOST', default='localhost'),
+        'PORT': ENV('SQL_PORT', default='5432'),
+    },
 }
 
 

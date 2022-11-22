@@ -2,11 +2,12 @@
 .idea/
 .vscode/
 
-# VENV
+# Virtual enveroment
 venv/
 env/
 
-# ENV
+# Env file
 .env
 
-
+# Local databse
+*/db.sqlite3
