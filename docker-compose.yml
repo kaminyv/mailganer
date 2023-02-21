@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/web/Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./mailganer/:/usr/src/app/
+    ports:
+      - '8000:8000'
+    env_file:
+      - ./mailganer/.env
+    depends_on:
+      - redis
+
+  celery:
+    build:
+      context: .
+      dockerfile: ./docker/web/Dockerfile
+    command: celery worker --app=mailganer --loglevel=info
+    volumes:
+      - ./mailganer/:/usr/src/app
+    env_file:
+      - ./mailganer/.env
+    depends_on:
+      - web
+      - redis
+
+  flower:
+    build:
+      context: .
+      dockerfile: ./docker/web/Dockerfile
+    command: flower -A mailganer --address=0.0.0.0 --port=5555
+    ports:
+      - '5555:5555'
+    volumes:
+      - ./mailganer/:/usr/src/app
+    env_file:
+      - ./mailganer/.env
+    depends_on:
+      - celery
+
+  redis:
+    image: redis:5-alpine
