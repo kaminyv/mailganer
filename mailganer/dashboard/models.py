@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from django.contrib.auth.models import User
 
 
 class BaseModel(models.Model):
@@ -15,6 +14,7 @@ class BaseModel(models.Model):
 
 class ContactList(BaseModel):
     name = models.CharField(verbose_name='name', max_length=50, unique=True)
+    contact = models.ManyToManyField('Contact', related_name='lists')
 
     def __unicode__(self):
         return self.name
@@ -32,8 +32,8 @@ class Contact(BaseModel):
     first_name = models.CharField(verbose_name='first name', max_length=50)
     middle_name = models.CharField(verbose_name='middle name', max_length=50,
                                    blank=True)
-    date_of_birth = models.DateTimeField(blank=True, null=True)
-    list = models.ManyToManyField(ContactList, related_name='contacts')
+    date_of_birth = models.DateField(verbose_name='birth day', blank=True,
+                                     null=True)
 
     def __unicode__(self):
         return ' '.join((self.last_name, self.first_name, self.middle_name))
@@ -55,7 +55,7 @@ class Template(BaseModel):
     class Meta:
         verbose_name = 'template'
         verbose_name_plural = 'templates'
-        ordering = ('-created_at', )
+        ordering = ('-created_at',)
 
 
 class Mailing(BaseModel):
@@ -64,6 +64,8 @@ class Mailing(BaseModel):
     template = models.ForeignKey(Template, on_delete=models.SET_NULL,
                                  blank=False, null=True)
     start = models.DateTimeField(blank=True, null=True)
+    sent = models.IntegerField(blank=True, default=0, editable=False)
+    task = models.UUIDField(blank=True, null=True, editable=False)
 
     def __unicode__(self):
         return str(self.pk)
@@ -72,3 +74,16 @@ class Mailing(BaseModel):
         verbose_name = 'mailing'
         verbose_name_plural = 'mailings'
         ordering = ('-created_at',)
+
+
+class Viewed(BaseModel):
+    mailing = models.ForeignKey('Mailing', on_delete=models.CASCADE)
+    contact = models.ForeignKey('Contact', on_delete=models.SET_NULL,
+                                null=True)
+
+    def __unicode__(self):
+        return str(self.pk)
+
+    class Meta:
+        verbose_name = 'viewed'
+        verbose_name_plural = 'viewed'

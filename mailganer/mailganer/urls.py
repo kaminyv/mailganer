@@ -20,4 +20,5 @@ import debug_toolbar
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^__debug__/', include(debug_toolbar.urls)),
+    url(r'^', include('dashboard.urls'))
 ]
