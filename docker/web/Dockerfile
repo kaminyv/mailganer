@@ -5,6 +5,10 @@ FROM python:2.7.18-alpine
 # set work directory
 WORKDIR /usr/src/app
 
+# install psycopg2 dependencies
+RUN apk update && apk add gcc musl-dev python-dev postgresql-dev
+
+
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -21,4 +25,4 @@ COPY ./mailganer/entrypoint.sh /usr/src/app/entrypoint.sh
 #COPY . /usr/src/app/
 
 # run entrypoint.sh
-#ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+# ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
