@@ -1,0 +1,16 @@
+{% extends 'dashboard_template.html' %}
+
+{% block title %}- Template Delete{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Template Delete</h1>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="alert alert-danger">Are you sure you want to delete <strong>{{ object }}</strong>?</div>
+        <button type="submit" class="btn btn-success">Confirm</button>
+        <a href="{% url 'template-list' %}" class="btn btn-danger">Cancel</a>
+    </form>
+{% endblock %}

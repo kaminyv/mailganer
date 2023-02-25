@@ -1,0 +1,41 @@
+{% extends 'dashboard_template.html' %}
+
+{% block title %} - Mailings{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Mailings</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <button type="button" class="btn btn-success">Create</button>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        {% if object_list %}
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Header</th>
+                    <th>Header</th>
+                    <th>Header</th>
+                    <th>Header</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>1,001</td>
+                    <td>random</td>
+                    <td>data</td>
+                    <td>placeholder</td>
+                    <td>text</td>
+                </tr>
+                </tbody>
+            </table>
+        {% else %}
+            <div class="alert alert-dark" role="alert">
+                There are no entries for the mailing list.
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

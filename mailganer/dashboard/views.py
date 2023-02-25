@@ -1,21 +1,106 @@
 # -*- coding: utf-8 -*-
+"""
+Views for dashboard app.
+"""
 from __future__ import unicode_literals
 
 import os
 
-from mailganer import celery_app
-
+from django.template.loader import render_to_string
+from django.urls import reverse_lazy
 from django.core.files.storage import default_storage
 from django.forms.models import model_to_dict
 from django.http import JsonResponse, HttpResponse
-from django.shortcuts import reverse
+from django.shortcuts import reverse, render
 from django.utils import timezone
-from django.views.generic import View
-from .models import Mailing
+from django.views import generic
+from .models import Contact, ContactList, Template, Mailing
+from mailganer import celery_app
 from .tasks import send_email, count_views
+from .forms import ContactForm, ContactListForm, TemplateForm
 
 
-class SendEmailsView(View):
+class IndexView(generic.RedirectView):
+    """Presents a index page."""
+    url = reverse_lazy('contactlist-list')
+
+
+class ContactView(generic.ListView):
+    """Presents a list of contacts."""
+    model = Contact
+
+
+class ContactCreateView(generic.CreateView):
+    """Presents the creation of a new contact."""
+    model = Contact
+    form_class = ContactForm
+    success_url = reverse_lazy('contact-list')
+
+
+class ContactUpdateView(generic.UpdateView):
+    """Represents editing the selected contact."""
+    model = Contact
+    form_class = ContactForm
+    success_url = reverse_lazy('contact-list')
+
+
+class ContactDeleteView(generic.DeleteView):
+    """Represents the deletion of the selected contact."""
+    model = Contact
+    success_url = reverse_lazy('contact-list')
+    template_name_suffix = '_delete'
+
+
+class ContactListView(generic.ListView):
+    """Presents a list of contacts list."""
+    model = ContactList
+
+
+class ContactListCreateView(generic.CreateView):
+    model = ContactList
+    form_class = ContactListForm
+    success_url = reverse_lazy('contactlist-list')
+
+
+class ContactListUpdateView(generic.UpdateView):
+    model = ContactList
+    form_class = ContactListForm
+    success_url = reverse_lazy('contactlist-list')
+
+
+class ContactListDeleteView(generic.DeleteView):
+    model = ContactList
+    success_url = reverse_lazy('contactlist-list')
+    template_name_suffix = '_delete'
+
+
+class TemplateView(generic.ListView):
+    model = Template
+
+
+class TemplateCreateView(generic.CreateView):
+    model = Template
+    form_class = TemplateForm
+    success_url = reverse_lazy('template-list')
+
+
+class TemplateUpdateView(generic.UpdateView):
+    model = Template
+    form_class = TemplateForm
+    success_url = reverse_lazy('template-list')
+
+
+class TemplateDeleteView(generic.DeleteView):
+    model = Template
+    success_url = reverse_lazy('template-list')
+    template_name_suffix = '_delete'
+
+
+class MailingView(generic.ListView):
+    model = Mailing
+
+
+class SendEmailsView(generic.View):
     """
 
     """
@@ -62,7 +147,7 @@ class SendEmailsView(View):
         return JsonResponse({'task_id': task.id})
 
 
-class StopSendEmailView(View):
+class StopSendEmailView(generic.View):
     def get(self, *args, **kwargs):
         mailing = Mailing.objects.get(pk=self.kwargs.get('pk'))
 
@@ -75,7 +160,7 @@ class StopSendEmailView(View):
         return JsonResponse({'Message': 'Abort task'})
 
 
-class ImageResponseView(View):
+class ImageResponseView(generic.View):
     def get(self, *args, **kwargs):
         mailing_id = self.request.GET.get('mid')
         contact_id = self.request.GET.get('cid')

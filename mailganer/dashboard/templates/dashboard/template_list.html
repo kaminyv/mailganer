@@ -1,0 +1,44 @@
+{% extends 'dashboard_template.html' %}
+
+{% block title %} - Templates{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Templates</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <a href="{% url 'template-create' %}" class="btn btn-success">Create</a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        {% if object_list %}
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for object in object_list %}
+                    <tr>
+                        <td class="align-middle">{{ object.name }}</td>
+                        <td class="align-middle text-right">
+                            <div class="btn-group">
+                                <a href="{% url 'template-update' object.pk %}"
+                                   class="btn btn-sm btn-primary">Edit</a>
+                                <a href="{% url 'template-delete' object.pk %}"
+                                   class="btn btn-sm btn-danger">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="alert alert-dark" role="alert">
+                There are no entries in the template.
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

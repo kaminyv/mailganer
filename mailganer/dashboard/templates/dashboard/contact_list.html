@@ -1,0 +1,46 @@
+{% extends 'dashboard_template.html' %}
+
+{% block title %} - Contacts{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Contacts</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <a href="{% url 'contact-create' %}" class="btn btn-success">Create</a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        {% if object_list %}
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Full name</th>
+                    <th>Birthday</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for object in object_list %}
+                    <tr>
+                        <td class="align-middle">{{ object.email }}</td>
+                        <td class="align-middle">{{ object }}</td>
+                        <td class="align-middle">{{ object.date_of_birth|default:"" }}</td>
+                        <td class="align-middle text-right">
+                            <div class="btn-group">
+                                <a href="{% url 'contact-update' object.pk %}" class="btn btn-sm btn-primary">Edit</a>
+                                <a href="{% url 'contact-delete' object.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="alert alert-dark" role="alert">
+                Not a single contact has been added.
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
