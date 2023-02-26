@@ -37,6 +37,7 @@ services:
     depends_on:
       - web
       - rabbitmq
+    restart: on-failure
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
