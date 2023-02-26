@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/web/Dockerfile
+    image: app
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./mailganer/:/usr/src/app/
@@ -26,9 +27,7 @@ services:
       - '5432:5432'
 
   celery:
-    build:
-      context: .
-      dockerfile: ./docker/web/Dockerfile
+    image: app
     command: celery worker --app=mailganer --loglevel=info
     volumes:
       - ./mailganer/:/usr/src/app
