@@ -42,7 +42,7 @@ urlpatterns = [
         name='template-delete'),
     # Mailing urls
     url(r'^mailings/$', views.MailingView.as_view(), name='mailing-list'),
-    url(r'^mailings/main/$', views.MailingMainView.as_view(),
+    url(r'^mailings/main/$', views.MailingModifiedView.as_view(),
         name='mailing-main'),
     url(r'^mailing/create$', views.MailingCreateView.as_view(),
         name='mailing-create'),

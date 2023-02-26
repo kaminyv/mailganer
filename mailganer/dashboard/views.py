@@ -1,13 +1,19 @@
 # -*- coding: utf-8 -*-
-"""
-Views for dashboard app.
-"""
 from __future__ import unicode_literals
+
+"""
+Views for dashboard application.
+"""
 
 import os
 
+from typing import Any
+
+from mailganer import celery_app
+from .tasks import send_email, count_views
+
 from celery.result import AsyncResult
-from django.template.loader import render_to_string
+
 from django.urls import reverse_lazy
 from django.core.files.storage import default_storage
 from django.forms.models import model_to_dict
@@ -15,9 +21,8 @@ from django.http import JsonResponse, HttpResponse
 from django.shortcuts import reverse, render
 from django.utils import timezone
 from django.views import generic
+
 from .models import Contact, ContactList, Template, Mailing
-from mailganer import celery_app
-from .tasks import send_email, count_views
 from .forms import ContactForm, ContactListForm, TemplateForm, MailingForm
 
 
@@ -58,55 +63,65 @@ class ContactListView(generic.ListView):
 
 
 class ContactListCreateView(generic.CreateView):
+    """Represents the creation of a new contact list for the mailing list."""
     model = ContactList
     form_class = ContactListForm
     success_url = reverse_lazy('contactlist-list')
 
 
 class ContactListUpdateView(generic.UpdateView):
+    """Represents an update of the contact list for the mailing list."""
     model = ContactList
     form_class = ContactListForm
     success_url = reverse_lazy('contactlist-list')
 
 
 class ContactListDeleteView(generic.DeleteView):
+    """Represents the deletion of a contact list for a mailing list."""
     model = ContactList
     success_url = reverse_lazy('contactlist-list')
     template_name_suffix = '_delete'
 
 
 class TemplateView(generic.ListView):
+    """Presents a list of templates for the mailing list."""
     model = Template
 
 
 class TemplateCreateView(generic.CreateView):
+    """Represents the creation of a new template for the mailing list."""
     model = Template
     form_class = TemplateForm
     success_url = reverse_lazy('template-list')
 
 
 class TemplateUpdateView(generic.UpdateView):
+    """Represents a template update for the mailing list."""
     model = Template
     form_class = TemplateForm
     success_url = reverse_lazy('template-list')
 
 
 class TemplateDeleteView(generic.DeleteView):
+    """Represents the removal of a template for a mailing list."""
     model = Template
     success_url = reverse_lazy('template-list')
     template_name_suffix = '_delete'
 
 
 class MailingView(generic.ListView):
+    """Presents a list of mailings."""
     model = Mailing
 
 
-class MailingMainView(generic.ListView):
+class MailingModifiedView(generic.ListView):
+    """Presents a list of mailing lists for ajax."""
     model = Mailing
-    template_name_suffix = '_list_main'
+    template_name_suffix = '_list_modified'
 
 
 class MailingCreateView(generic.CreateView):
+    """Represents the creation of a new mailing."""
     model = Mailing
     form_class = MailingForm
     success_url = reverse_lazy('mailing-list')
@@ -117,6 +132,7 @@ class MailingCreateView(generic.CreateView):
 
 
 class MailingUpdateView(generic.UpdateView):
+    """Represents a mailing update"""
     model = Mailing
     form_class = MailingForm
     success_url = reverse_lazy('mailing-list')
@@ -127,12 +143,15 @@ class MailingUpdateView(generic.UpdateView):
 
 
 class MailingDeleteView(generic.DeleteView):
+    """Represents a mailing update"""
     model = Mailing
     success_url = reverse_lazy('mailing-list')
     template_name_suffix = '_delete'
 
     def delete(self, request, *args, **kwargs):
-        mailing_id = kwargs.get('pk')
+        # type: (MailingDeleteView, Any, object, object) -> JsonResponse
+        """Custom mailing removal method for ajax."""
+        mailing_id = self.kwargs.get('pk')
         mailing = Mailing.objects.get(pk=mailing_id)
         mailing.delete()
 
@@ -140,16 +159,10 @@ class MailingDeleteView(generic.DeleteView):
 
 
 class SendEmailsView(generic.View):
-    """
-
-    """
+    """View for sent mailing"""
     def get(self, *args, **kwargs):
-        """
-
-        :param args:
-        :param kwargs:
-        :return:
-        """
+        # type: (SendEmailsView, object, object) -> JsonResponse
+        """Send a mailing list to the queue."""
         mailing = Mailing.objects.get(pk=self.kwargs.get('pk'))
 
         contacts = [model_to_dict(contact)
@@ -189,7 +202,10 @@ class SendEmailsView(generic.View):
 
 
 class StopSendEmailView(generic.View):
+    """View for stop sent mailing"""
     def get(self, *args, **kwargs):
+        # type: (StopSendEmailView, object, object) -> JsonResponse
+        """Cancels a running task."""
         mailing = Mailing.objects.get(pk=self.kwargs.get('pk'))
 
         if not mailing.task:
@@ -203,7 +219,12 @@ class StopSendEmailView(generic.View):
 
 
 class ImageResponseView(generic.View):
+    """View for response pixel for email"""
     def get(self, *args, **kwargs):
+        # type: (ImageResponseView, object, object) -> HttpResponse
+        """
+        Returns the pixel for the email and the created item for the count.
+        """
         mailing_id = self.request.GET.get('mid')
         contact_id = self.request.GET.get('cid')
         if mailing_id and contact_id:
