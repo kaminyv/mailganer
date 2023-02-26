@@ -20,9 +20,3 @@ RUN pip install -r requirements.txt
 
 # copy entrypoint.sh
 COPY ./mailganer/entrypoint.sh /usr/src/app/entrypoint.sh
-
-# copy project
-#COPY . /usr/src/app/
-
-# run entrypoint.sh
-# ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
