@@ -8,13 +8,7 @@ from typing import Dict, List, AnyStr
 @task()
 def send_email(contacts, template, setting):
     # type: (List, Dict, Dict) -> int
-    """
-
-    :param contacts:
-    :param template:
-    :param setting:
-    :return:
-    """
+    """Places the mailing job in the queue."""
     setting_context = dict(setting=setting, template=template)
 
     messages = []
@@ -51,12 +45,7 @@ def send_email(contacts, template, setting):
 @task()
 def count_views(mailing_id, contact_id):
     # type: (AnyStr, AnyStr) -> str
-    """
-
-    :param mailing_id:
-    :param contact_id:
-    :return:
-    """
+    """Cancels the mailing job to the queue."""
     if not mailing_id.isdigit() or not contact_id.isdigit():
         raise Exception('Parameters are not a number.')
 
