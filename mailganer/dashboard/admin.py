@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-"""
-Admins panel for dashboard app.
-"""
 from __future__ import unicode_literals
+
+"""
+Admins panel for dashboard application.
+"""
 
 from django.contrib import admin
 
