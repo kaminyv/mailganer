@@ -26,17 +26,27 @@
                 <td class="align-middle text-right">
                     <div class="btn-group">
                         <button onclick="celeryMailing(this)" data-url="{% url 'mailing-start' object.pk %}"
-                           class="btn btn-sm btn-success {% if object.status %}disabled{% endif %}">Start</button>
+                                class="btn btn-sm btn-success {% if object.status %}disabled{% endif %}"
+                                {% if object.status %}disabled{% endif %}>
+                            Start
+                        </button>
                         <button onclick="celeryMailing(this)" data-url="{% url 'mailing-stop' object.pk %}"
-                           class="btn btn-sm btn-warning {% if object.status != 'PENDING' %}disabled{% endif %}">Cancel</button>
+                                class="btn btn-sm btn-warning {% if object.status == 'READY' %}disabled{% endif %}"
+                                {% if object.status == 'READY' %}disabled{% endif %}>
+                            Cancel
+                        </button>
                     </div>
                     <div class="btn-group">
                         <button onclick="modifyMailing(this)"
                                 data-url="{% url 'mailing-update' object.pk %}"
-                                class="btn btn-sm btn-primary {% if object.status %}disabled{% endif %}">Edit
+                                class="btn btn-sm btn-primary {% if object.status %}disabled{% endif %}"
+                                {% if object.status %}disabled{% endif %}>
+                            Edit
                         </button>
                         <button onclick="modifyMailing(this)" data-url="{% url 'mailing-delete' object.pk %}"
-                           class="btn btn-sm btn-danger">Delete</button>
+                                class="btn btn-sm btn-danger">
+                            Delete
+                        </button>
                     </div>
                 </td>
             </tr>

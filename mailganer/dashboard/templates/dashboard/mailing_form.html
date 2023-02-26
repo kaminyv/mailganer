@@ -6,6 +6,9 @@
             <h1 class="h2">{% if url_name != 'mailing-update' %}Create{% else %}Update{% endif %} Mailing</h1>
         {% endwith %}
     </div>
+    <div class="alert alert-primary">
+        The time for the mailing must be set in the UTC0 time zone.
+    </div>
 
     <form method="post">
         {% csrf_token %}

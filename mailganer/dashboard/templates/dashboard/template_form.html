@@ -14,6 +14,18 @@
             <h1 class="h2">{% if url_name != 'template-update' %}Create{% else %}Update{% endif %} Template</h1>
         {% endwith %}
     </div>
+    <div class="alert alert-primary">
+        <strong>Contact</strong> object variables are available for the <strong>Body</strong> field:
+        <ul>
+            <li><strong>email</strong> - E-mail address </li>
+            <li><strong>last_name</strong> - Last name </li>
+            <li><strong>first_name</strong> - First name </li>
+            <li><strong>middle_name</strong> - Middle name </li>
+            <li><strong>date_of_birth</strong> - Birthday </li>
+        </ul>
+        Use <strong>{ {"</strong> at the beginning of the variable and <strong>} }</strong> at the end to insert variables.
+
+    </div>
 
     <form method="post">
         {% csrf_token %}
