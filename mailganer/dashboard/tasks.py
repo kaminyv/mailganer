@@ -39,9 +39,9 @@ def send_email(contacts, template, setting):
 
     connection = get_connection()
     count_sends = connection.send_messages(messages)
-
     mailing = Mailing.objects.get(pk=setting.get('mailing_id'))
     mailing.sent = count_sends
+    mailing.status = 'READY'
     mailing.task = None
     mailing.save()
 

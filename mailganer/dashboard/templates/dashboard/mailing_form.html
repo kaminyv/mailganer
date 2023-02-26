@@ -1,0 +1,12 @@
+{% block content %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        {% with request.resolver_match.url_name as url_name %}
+            <h1 class="h2">{% if url_name != 'mailing-update' %}Create{% else %}Update{% endif %} Mailing</h1>
+        {% endwith %}
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form }}
+    </form>
+{% endblock %}

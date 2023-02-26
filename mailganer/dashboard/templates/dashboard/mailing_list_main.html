@@ -1,0 +1,54 @@
+{% if object_list %}
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>List</th>
+            <th>Template</th>
+            <th>Count sent</th>
+            <th>Count views</th>
+            <th>Date time start</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for object in object_list %}
+            <tr>
+                <td class="align-middle">{{ object.id }}</td>
+                <td class="align-middle">{{ object.contact_list }}</td>
+                <td class="align-middle">{{ object.template }}</td>
+                <td class="align-middle">{{ object.sent|default:'' }}</td>
+                <td class="align-middle">{{ object.get_count_views|default_if_none:'' }}</td>
+                <td class="align-middle">{{ object.start|default_if_none:'' }}</td>
+                <td class="align-middle">{{ object.status|default_if_none:'' }}</td>
+
+                <td class="align-middle text-right">
+                    <div class="btn-group">
+                        <button onclick="celeryMailing(this)" data-url="{% url 'mailing-start' object.pk %}"
+                           class="btn btn-sm btn-success {% if object.status %}disabled{% endif %}">Start</button>
+                        <button onclick="celeryMailing(this)" data-url="{% url 'mailing-stop' object.pk %}"
+                           class="btn btn-sm btn-warning {% if object.status != 'PENDING' %}disabled{% endif %}">Cancel</button>
+                    </div>
+                    <div class="btn-group">
+                        <button onclick="modifyMailing(this)"
+                                data-url="{% url 'mailing-update' object.pk %}"
+                                class="btn btn-sm btn-primary {% if object.status %}disabled{% endif %}">Edit
+                        </button>
+                        <button onclick="modifyMailing(this)" data-url="{% url 'mailing-delete' object.pk %}"
+                           class="btn btn-sm btn-danger">Delete</button>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="alert alert-dark" role="alert">
+        There are no entries in the template.
+    </div>
+{% endif %}
+
+<script>
+
+</script>

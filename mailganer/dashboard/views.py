@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 
 import os
 
+from celery.result import AsyncResult
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.core.files.storage import default_storage
@@ -17,12 +18,12 @@ from django.views import generic
 from .models import Contact, ContactList, Template, Mailing
 from mailganer import celery_app
 from .tasks import send_email, count_views
-from .forms import ContactForm, ContactListForm, TemplateForm
+from .forms import ContactForm, ContactListForm, TemplateForm, MailingForm
 
 
 class IndexView(generic.RedirectView):
     """Presents a index page."""
-    url = reverse_lazy('contactlist-list')
+    url = reverse_lazy('contact-list')
 
 
 class ContactView(generic.ListView):
@@ -100,6 +101,44 @@ class MailingView(generic.ListView):
     model = Mailing
 
 
+class MailingMainView(generic.ListView):
+    model = Mailing
+    template_name_suffix = '_list_main'
+
+
+class MailingCreateView(generic.CreateView):
+    model = Mailing
+    form_class = MailingForm
+    success_url = reverse_lazy('mailing-list')
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return JsonResponse({'success': True})
+
+
+class MailingUpdateView(generic.UpdateView):
+    model = Mailing
+    form_class = MailingForm
+    success_url = reverse_lazy('mailing-list')
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return JsonResponse({'success': True})
+
+
+class MailingDeleteView(generic.DeleteView):
+    model = Mailing
+    success_url = reverse_lazy('mailing-list')
+    template_name_suffix = '_delete'
+
+    def delete(self, request, *args, **kwargs):
+        mailing_id = kwargs.get('pk')
+        mailing = Mailing.objects.get(pk=mailing_id)
+        mailing.delete()
+
+        return JsonResponse({'success': True})
+
+
 class SendEmailsView(generic.View):
     """
 
@@ -130,6 +169,7 @@ class SendEmailsView(generic.View):
 
         if not mailing.start:
             task = send_email.delay(contacts, template, setting)
+            mailing.status = AsyncResult(task.id).state
             mailing.start = timezone.now()
             mailing.task = task.id
             mailing.save()
@@ -141,6 +181,7 @@ class SendEmailsView(generic.View):
 
         task = send_email.apply_async((contacts, template, setting),
                                       eta=mailing.start)
+        mailing.status = AsyncResult(task.id).state
         mailing.task = task.id
         mailing.save()
 
@@ -155,6 +196,7 @@ class StopSendEmailView(generic.View):
             return JsonResponse({'Message': 'Mailing not task'})
 
         celery_app.control.revoke(task_id=mailing.task, terminate=True)
+        mailing.status = None
         mailing.task = None
         mailing.save()
         return JsonResponse({'Message': 'Abort task'})

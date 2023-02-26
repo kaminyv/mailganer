@@ -69,6 +69,7 @@ class Mailing(BaseModel):
     start = models.DateTimeField(blank=True, null=True)
     sent = models.IntegerField(blank=True, default=0, editable=False)
     task = models.UUIDField(blank=True, null=True, editable=False)
+    status = models.CharField(max_length=10, blank=True, null=True, editable=False)
 
     def __unicode__(self):
         return str(self.pk)
@@ -77,6 +78,10 @@ class Mailing(BaseModel):
         verbose_name = 'mailing'
         verbose_name_plural = 'mailings'
         ordering = ('-created_at',)
+
+    def get_count_views(self):
+        count_views = Viewed.objects.filter(mailing=self.id).count()
+        return '' if count_views == 0 else str(count_views)
 
 
 class Viewed(BaseModel):

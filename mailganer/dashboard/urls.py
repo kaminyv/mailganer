@@ -8,10 +8,6 @@ from django.conf.urls import url
 import views
 
 urlpatterns = [
-    url(r'^sendemail/start/(?P<pk>\d+)$', views.SendEmailsView.as_view(),
-        name='sendemail-start'),
-    url(r'^sendemail/stop/(?P<pk>\d+)$', views.StopSendEmailView.as_view(),
-        name='sendemail-stop'),
     url(r'^mailing/images/pixel.png', views.ImageResponseView.as_view(),
         name='image-response'),
     # Contact urls
@@ -39,7 +35,18 @@ urlpatterns = [
         name='template-update'),
     url(r'^template/delete/(?P<pk>\d+)$', views.TemplateDeleteView.as_view(),
         name='template-delete'),
-    url(r'^mailing/$', views.MailingView.as_view(), name='mailing-list'),
+    url(r'^mailings/$', views.MailingView.as_view(), name='mailing-list'),
+    url(r'^mailings/main/$', views.MailingMainView.as_view(), name='mailing-main'),
+    url(r'^mailing/create$', views.MailingCreateView.as_view(),
+        name='mailing-create'),
+    url(r'^mailing/update/(?P<pk>\d+)$', views.MailingUpdateView.as_view(),
+        name='mailing-update'),
+    url(r'^mailing/delete/(?P<pk>\d+)$', views.MailingDeleteView.as_view(),
+        name='mailing-delete'),
+    url(r'^mailing/start/(?P<pk>\d+)$', views.SendEmailsView.as_view(),
+        name='mailing-start'),
+    url(r'^mailing/stop/(?P<pk>\d+)$', views.StopSendEmailView.as_view(),
+        name='mailing-stop'),
 
     url(r'^', views.IndexView.as_view(), name='index')
 ]
