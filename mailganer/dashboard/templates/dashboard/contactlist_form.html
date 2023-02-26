@@ -1,5 +1,7 @@
 {% extends 'dashboard_template.html' %}
 
+{% load crispy_forms_tags %}
+
 {% block title %}
     {% with request.resolver_match.url_name as url_name %}
         - {% if url_name != 'contactlist-update' %}Create{% else %}Update{% endif %} Lists
@@ -15,7 +17,7 @@
 
     <form method="post">
         {% csrf_token %}
-        {{ form }}
+        {{ form|crispy }}
         <button type="submit" class="btn btn-success">Save</button>
         <a href="{% url 'contactlist-list' %}" class="btn btn-danger">Cancel</a>
     </form>

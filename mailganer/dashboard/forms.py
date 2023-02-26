@@ -22,12 +22,6 @@ class CustomDateTimeInput(DateTimeInput):
 class ContactForm(ModelForm):
     """A form to display the fields for a Contact."""
 
-    def __init__(self, *args, **kwargs):
-        super(ContactForm, self).__init__(*args, **kwargs)
-        # Adding a class for all form fields.
-        for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control mb-4'
-
     class Meta:
         model = Contact
         fields = '__all__'
@@ -39,12 +33,6 @@ class ContactForm(ModelForm):
 class ContactListForm(ModelForm):
     """A form to display the fields for a Contact list."""
 
-    def __init__(self, *args, **kwargs):
-        super(ContactListForm, self).__init__(*args, **kwargs)
-        # Adding a class for all form fields.
-        for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control mb-4'
-
     class Meta:
         model = ContactList
         fields = '__all__'
@@ -52,12 +40,6 @@ class ContactListForm(ModelForm):
 
 class TemplateForm(ModelForm):
     """A form to display the fields for a Template."""
-
-    def __init__(self, *args, **kwargs):
-        super(TemplateForm, self).__init__(*args, **kwargs)
-        # Adding a class for all form fields.
-        for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control mb-4'
 
     class Meta:
         model = Template
@@ -75,12 +57,6 @@ class MailingForm(ModelForm):
             format='%Y-%m-%dT%H:%M'),
         required=False
     )
-
-    def __init__(self, *args, **kwargs):
-        super(MailingForm, self).__init__(*args, **kwargs)
-        # Adding a class for all form fields.
-        for visible in self.visible_fields():
-            visible.field.widget.attrs['class'] = 'form-control mb-4'
 
     class Meta:
         model = Mailing

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
+    'crispy_forms',
     'dashboard',
 ]
 
@@ -138,3 +139,6 @@ EMAIL_PORT = os.environ.get('EMAIL_PORT')
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = int(os.environ.get('EMAIL_USE_TLS'))
+
+# Crispy settings
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
