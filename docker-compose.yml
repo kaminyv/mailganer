@@ -15,7 +15,7 @@ services:
     env_file:
       - ./mailganer/.env
     depends_on:
-      - db
+      - celery
     restart: on-failure
 
   db:
@@ -35,7 +35,6 @@ services:
     env_file:
       - ./mailganer/.env
     depends_on:
-      - web
       - rabbitmq
     restart: on-failure
 
@@ -45,6 +44,9 @@ services:
     ports:
       - '5672:5672'
       - '15672:15672'
+    env_file:
+      - mailganer/.env
+    restart: on-failure
 
   mailhog:
     image: mailhog/mailhog
@@ -52,6 +54,7 @@ services:
     ports:
       - "1025:1025"
       - "8025:8025"
+    restart: on-failure
 
 volumes:
   postgres_data:

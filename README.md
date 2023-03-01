@@ -1,47 +1,48 @@
 # Mailganer
 
-Проект выполнен в рамках тестового задания.
+The project is done as part of a test assignment.
 
-Демонстрирует работу минималистичного сервиса для рассылки электронной почты.
+Demonstrates how the bulk mail service works.
 
-## Тестовое задание
+## Test task
 
-Написать на Python 2.7* небольшой сервис для рассылки электронной почты.
+Write a small email service in Python 2.7*.
 
-**Задачи:**
+**Tasks:**
 
-1. Отправка рассылок с использованием html макета и списка подписчиков. 
-2. Для создания рассылки использовать ajax запрос.
-   Форма для создания рассылки заполняется в модальном окне. 
-   Использовать библиотеки: jquery, bootstrap. 
-3. Отправка отложенных рассылок.
-4. Использование переменных в макете рассылки.
-   (Пример: имя, фамилия, день рождения из списка подписчиков)
-5. Отслеживание открытий писем.
+1. Sending newsletters using html layout and subscriber list. 
+2. To create a mailing list, use an ajax request.
+   The form to create a newsletter is filled out in the modal window. 
+   Use libraries: jquery, bootstrap. 
+3. Sending pending newsletters.
+4. Using variables in the mailing list layout.
+   (Example: first name, last name, birthday from the list of subscribers)
+5. Tracking open emails.
 
-Отложенные отправки реализовать при помощи Celery.
+Implement delayed shipments with Celery.
 
-Способ хранения макетов писем и списков подписчиков на усмотрение исполнителя.
+The method of storing email layouts and lists of subscribers 
+is at the discretion of the performer.
 
-## Тестовое окружение
+## Test environment
 
-Для развертывания должен быть установлен Docker.
+Docker must be installed for deployment.
 
-**Интерфейсы (по умолчанию)**:
-- Веб интерфейс приложения: `http://127.0.0.1:8000`
-- Веб интерфейс почтового клиента: `http://127.0.0.1:8025`
-- Beб интерфейс rabbitmq: `http://127.0.0.1:15672`
+**Interfaces (default)**:
+- Application web interface: `http://127.0.0.1:8000`
+- Web interface of the email client: `http://127.0.0.1:8025`
+- Web interface rabbitmq: `http://127.0.0.1:15672`
 
-### Развертывание
-- Клонируйте репозиторий: `git clone https://github.com/kaminyv/mailganer.git`
-- Перейдите в каталог проекта: `cd mailganer/`
-- Скопируйте файл с переменными окружения: 
+### Deploying
+- Clone the repository: `git clone https://github.com/kaminyv/mailganer.git`
+- Go to the project directory: `cd mailganer/`
+- Copy the file with the environment variables: 
   `cp mailganer/.env.example mailganer/.env`
-- Отредактируйте файл с переменными окружения: `nano mailganer/.env` 
-  (Можно оставить по умолчанию)
-- Запустите сборку окружения: `docker compose up`
-- Запустите посев начальных данных: 
+- Edit the file with the environment variables: `nano mailganer/.env` 
+  (You can leave the default)
+- Run the environment build: `docker compose up`
+- Start seeding the initial data: 
   `docker compose exec -it web python manage.py seed`
 
-При успешной сборке интерфейс приложения для приложения и сервисов будет 
-доступен по адресам указанным в **интерфейсах**.
+If built successfully, the application interface for the application and 
+services will be are available at the addresses specified in **interfaces**.
